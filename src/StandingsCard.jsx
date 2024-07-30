@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import cheerio from "cheerio";
+import IconMedal from "./IconMedal";
 
 const familyDraft = {
   Lily: ["Peru", "Germany", "Sweden"],
@@ -16,14 +17,18 @@ const calculateFamilyScores = (medalData) => {
   const scores = {};
 
   for (const member in familyDraft) {
-    scores[member] = 0;
+    scores[member] = { gold: 0, silver: 0, bronze: 0, total: 0, score: 0 };
 
     familyDraft[member].forEach((country) => {
       const countryData = medalData.find((item) =>
         item.country.includes(country)
       );
       if (countryData) {
-        scores[member] +=
+        scores[member].gold += countryData.gold;
+        scores[member].silver += countryData.silver;
+        scores[member].bronze += countryData.bronze;
+        scores[member].total += countryData.total;
+        scores[member].score +=
           countryData.gold * 3 +
           countryData.silver * 2 +
           countryData.bronze * 1;
@@ -59,10 +64,14 @@ const MedalTable = () => {
           const rank = row.find("td:nth-child(1)").text().trim();
           const country = row.find("a:nth-child(2)").text().trim();
 
-          let gold = parseInt(row.find("td:nth-child(3)").text().trim(), 10) || 0;
-          let silver = parseInt(row.find("td:nth-child(4)").text().trim(), 10) || 0;
-          let bronze = parseInt(row.find("td:nth-child(5)").text().trim(), 10) || 0;
-          let total = parseInt(row.find("td:nth-child(6)").text().trim(), 10) || 0;
+          let gold =
+            parseInt(row.find("td:nth-child(3)").text().trim(), 10) || 0;
+          let silver =
+            parseInt(row.find("td:nth-child(4)").text().trim(), 10) || 0;
+          let bronze =
+            parseInt(row.find("td:nth-child(5)").text().trim(), 10) || 0;
+          let total =
+            parseInt(row.find("td:nth-child(6)").text().trim(), 10) || 0;
 
           if (!rank) {
             gold = lastValidValues.gold;
@@ -93,11 +102,11 @@ const MedalTable = () => {
 
   const getRankedFamilyScores = () => {
     const sortedScores = Object.entries(familyScores).sort(
-      (a, b) => b[1] - a[1]
+      (a, b) => b[1].score - a[1].score
     );
-    return sortedScores.map(([member, score], index) => ({
+    return sortedScores.map(([member, details], index) => ({
       member,
-      score,
+      ...details,
       rank: index + 1,
     }));
   };
@@ -112,7 +121,10 @@ const MedalTable = () => {
 
   if (loading) {
     return (
-      <div role="status" className="absolute w-screen h-screen flex items-center justify-center">
+      <div
+        role="status"
+        className="absolute w-screen h-screen flex items-center justify-center"
+      >
         <svg
           aria-hidden="true"
           className="w-24 h-24 text-gray-400 animate-spin dark:text-gray-600 fill-blue-600"
@@ -151,7 +163,27 @@ const MedalTable = () => {
               {rankedFamilyScores.map((row, index) => (
                 <tr key={index}>
                   <td className="border px-2 md:px-4 py-2">{row.rank}</td>
-                  <td className="border px-2 md:px-4 py-2">{row.member}</td>
+                  <td className="border px-2 md:px-4 py-2 flex md:gap-4 items-center">
+                    <h3 className="w-12">{row.member}</h3>
+                    {row.gold > 0 && (
+                      <div className="flex items-center gap-1">
+                        <IconMedal className="w-6 h-6 text-[#FFD700]" />
+                        {row.gold}
+                      </div>
+                    )}
+                    {row.silver > 0 && (
+                      <div className="flex items-center gap-1">
+                        <IconMedal className="w-6 h-6 text-[#C0C0C0]" />
+                        {row.silver}
+                      </div>
+                    )}
+                    {row.bronze > 0 && (
+                      <div className="flex items-center gap-1">
+                        <IconMedal className="w-6 h-6 text-[#CD7F32]" />
+                        {row.bronze}
+                      </div>
+                    )}
+                  </td>
                   <td className="border px-2 md:px-4 py-2">{row.score}</td>
                 </tr>
               ))}
