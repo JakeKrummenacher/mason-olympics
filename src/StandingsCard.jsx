@@ -163,7 +163,7 @@ const MedalTable = () => {
               {rankedFamilyScores.map((row, index) => (
                 <tr key={index}>
                   <td className="border px-2 md:px-4 py-2">{row.rank}</td>
-                  <td className="border px-2 md:px-4 py-2 flex md:gap-4 items-center">
+                  <td className="border px-2 md:px-4 py-2 flex gap-2 md:gap-4 items-center">
                     <h3 className="w-12">{row.member}</h3>
                     {row.gold > 0 && (
                       <div className="flex items-center gap-1">
