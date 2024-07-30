@@ -4,11 +4,11 @@ import cheerio from "cheerio";
 import IconMedal from "./IconMedal";
 
 const familyDraft = {
+  Jake: ["Japan", "New Zealand", "Slovenia"],
   Lily: ["Peru", "Germany", "Sweden"],
   Tera: ["France", "Croatia", "Egypt"],
   Elise: ["Italy", "Portugal", "South Africa"],
   Grace: ["China", "Mexico", "Jamaica"],
-  Jake: ["Japan", "New Zealand", "Slovenia"],
   Will: ["Ukraine", "Turkey", "Colombia"],
   Mike: ["Israel", "South Korea", "Spain"],
 };
@@ -113,16 +113,15 @@ const MedalTable = () => {
     let previousScore;
     let previousRank;
     return sortedScores.map(([member, details], index) => {
-        if (index === 0 ) {
-            rank = 1
-            previousRank = 1
-            previousScore = details.score
-        }
-      else if (index !== 0 && details.score === previousScore) {
+      if (index === 0) {
+        rank = 1;
+        previousRank = 1;
+        previousScore = details.score;
+      } else if (index !== 0 && details.score === previousScore) {
         rank = previousRank;
-    } else{
-        rank = index + 1
-        previousRank = rank
+      } else {
+        rank = index + 1;
+        previousRank = rank;
       }
       previousScore = details.score;
 
@@ -168,10 +167,8 @@ const MedalTable = () => {
       </div>
     );
   }
-  if(error) {
-    return (
-        <h1 className="text-2xl m-12">{error}</h1>
-    )
+  if (error) {
+    return <h1 className="text-2xl m-12">{error}</h1>;
   }
 
   return (
