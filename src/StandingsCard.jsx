@@ -43,6 +43,7 @@ const MedalTable = () => {
   const [medalData, setMedalData] = useState([]);
   const [familyScores, setFamilyScores] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMedalTable = async () => {
@@ -94,6 +95,9 @@ const MedalTable = () => {
       } catch (error) {
         console.error("Error fetching the medal table:", error);
         setLoading(false);
+        setError(
+          "App couldn't retrieve the medal data. You probably just need to refresh the page. If you refresh a few times with no improvement then everything is jacked up and you should tell Jake."
+        );
       }
     };
 
@@ -104,11 +108,30 @@ const MedalTable = () => {
     const sortedScores = Object.entries(familyScores).sort(
       (a, b) => b[1].score - a[1].score
     );
-    return sortedScores.map(([member, details], index) => ({
-      member,
-      ...details,
-      rank: index + 1,
-    }));
+
+    let rank;
+    let previousScore;
+    let previousRank;
+    return sortedScores.map(([member, details], index) => {
+        if (index === 0 ) {
+            rank = 1
+            previousRank = 1
+            previousScore = details.score
+        }
+      else if (index !== 0 && details.score === previousScore) {
+        rank = previousRank;
+    } else{
+        rank = index + 1
+        previousRank = rank
+      }
+      previousScore = details.score;
+
+      return {
+        member,
+        ...details,
+        rank,
+      };
+    });
   };
 
   const rankedFamilyScores = getRankedFamilyScores();
@@ -144,6 +167,11 @@ const MedalTable = () => {
         <span className="sr-only">Loading...</span>
       </div>
     );
+  }
+  if(error) {
+    return (
+        <h1 className="text-2xl m-12">{error}</h1>
+    )
   }
 
   return (
