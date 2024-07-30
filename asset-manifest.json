@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/mason-olympics/static/css/main.a53a4941.css",
-    "main.js": "/mason-olympics/static/js/main.adccd44c.js",
+    "main.css": "/mason-olympics/static/css/main.79f0a1c4.css",
+    "main.js": "/mason-olympics/static/js/main.a87c9767.js",
     "static/js/453.75f1a455.chunk.js": "/mason-olympics/static/js/453.75f1a455.chunk.js",
     "index.html": "/mason-olympics/index.html",
-    "main.a53a4941.css.map": "/mason-olympics/static/css/main.a53a4941.css.map",
-    "main.adccd44c.js.map": "/mason-olympics/static/js/main.adccd44c.js.map",
+    "main.79f0a1c4.css.map": "/mason-olympics/static/css/main.79f0a1c4.css.map",
+    "main.a87c9767.js.map": "/mason-olympics/static/js/main.a87c9767.js.map",
     "453.75f1a455.chunk.js.map": "/mason-olympics/static/js/453.75f1a455.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a53a4941.css",
-    "static/js/main.adccd44c.js"
+    "static/css/main.79f0a1c4.css",
+    "static/js/main.a87c9767.js"
   ]
 }
