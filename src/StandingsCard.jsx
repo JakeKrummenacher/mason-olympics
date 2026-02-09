@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import cheerio from "cheerio";
+import {load} from "cheerio";
 import IconMedal from "./IconMedal";
 import LoadingIcon from "./LoadingIcon";
 
 const familyDraft = {
-  Jake: ["Japan", "New Zealand", "Slovenia"],
-  Lily: ["Peru", "Germany", "Sweden"],
-  Tera: ["France", "Croatia", "Egypt"],
-  Elise: ["Italy", "Portugal", "South Africa"],
-  Grace: ["China", "Mexico", "Jamaica"],
-  Will: ["Ukraine", "Turkey", "Colombia"],
-  Mike: ["Israel", "South Korea", "Spain"],
+  Jake: ["Finland", "South Korea", "Slovakia"],
+  Lily: ["Austria", "Netherlands", "Poland"],
+  Tera: ["France", "Belgium", "Individual Neutral Athletes"],
+  Elise: ["Canada", "Slovenia", "Ukraine"],
+  Grace: ["United States", "Denmark", "Bulgaria"],
+  Will: ["Germany", "Great Britain", "New Zealand"],
+  Mike: ["Norway", "Sweden", "Australia"],
 };
 
 const calculateFamilyScores = (medalData) => {
@@ -50,11 +50,11 @@ const MedalTable = () => {
     const fetchMedalTable = async () => {
       try {
         const response = await axios.get(
-          "https://api.allorigins.win/raw?url=https://en.wikipedia.org/wiki/2024_Summer_Olympics_medal_table"
+          "https://api.allorigins.win/raw?url=https://en.wikipedia.org/wiki/2026_Winter_Olympics_medal_table"
         );
         const html = response.data;
 
-        const $ = cheerio.load(html);
+        const $ = load(html);
 
         const tableRows = $("table.wikitable tbody tr");
 
