@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {load} from "cheerio";
+import { load } from "cheerio";
 import IconMedal from "./IconMedal";
 import LoadingIcon from "./LoadingIcon";
+import "flag-icons/css/flag-icons.min.css";
+import { getCode } from "iso-3166-1-alpha-2";
 
 const familyDraft = {
   Jake: ["Finland", "South Korea", "Slovakia"],
@@ -38,6 +40,17 @@ const calculateFamilyScores = (medalData) => {
   }
 
   return scores;
+};
+
+const normalizeCountryName = (name) => {
+  if (!name) return "";
+  const n = name.trim();
+  const aliases = {
+    "Great Britain": "United Kingdom",
+    "South Korea": "Korea, Republic of",
+    // add more aliases here if needed
+  };
+  return aliases[n] ?? n;
 };
 
 const MedalTable = () => {
@@ -143,117 +156,158 @@ const MedalTable = () => {
   );
 
   if (loading) {
-    return (
-      <LoadingIcon />
-    );
+    return <LoadingIcon />;
   }
   if (error) {
     return <h1 className="text-2xl m-12">{error}</h1>;
   }
 
-  const getRowspanCounts = (rankedScores, field) => {
-    const counts = {};
-    rankedScores.forEach((row, index) => {
-      if (counts[row[field]]) {
-        counts[row[field]] += 1;
-      } else {
-        counts[row[field]] = 1;
-      }
-    });
-    return counts;
+  const renderCountryChip = (country, index) => {
+    if (country === "Individual Neutral Athletes") {
+      return (
+        <span
+          key={index}
+          className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 px-2 py-1 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700 shadow-sm"
+          aria-label="Individual Neutral Athletes (INA)"
+        >
+          INA
+        </span>
+      );
+    }
+
+    const normalized = normalizeCountryName(country);
+    const code = normalized ? getCode(normalized) : null;
+
+    return (
+      <span
+        key={index}
+        className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 px-2 py-1 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700 shadow-sm"
+      >
+        {code ? (
+          <span
+            className={`fi fi-${String(code).toLowerCase()} w-5 h-3 rounded-sm flex-shrink-0`}
+            aria-hidden="true"
+          />
+        ) : (
+          <span className="text-xs text-gray-500">—</span>
+        )}
+        <span className="truncate max-w-[9rem] sm:max-w-[12rem]">{country}</span>
+      </span>
+    );
   };
 
-  const rankRowspanCounts = getRowspanCounts(rankedFamilyScores, "rank");
-  const scoreRowspanCounts = getRowspanCounts(rankedFamilyScores, "score");
-  let displayedRanks = {};
-  let displayedScores = {};
-
   return (
-    <div className="h-full w-full container p-4 md:p-12 space-y-8 items-center">
-      <div className="bg-white shadow-lg rounded-lg p-4 md:p-6">
-        <h2 className="text-xl font-bold mb-4">Family Draft Scores</h2>
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full">
-            <thead>
-              <tr>
-                <th className="px-2 md:px-4 py-2">Rank</th>
-                <th className="px-2 md:px-4 py-2">Family Member</th>
-                <th className="px-2 md:px-4 py-2">Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rankedFamilyScores.map((row, index) => (
-                <tr key={index}>
-                  {displayedRanks[row.rank] ? null : (
-                    <td
-                      className="border px-2 md:px-4 py-2"
-                      rowSpan={rankRowspanCounts[row.rank]}
-                    >
-                      {row.rank}
-                    </td>
-                  )}
-                  {displayedRanks[row.rank] = true}
-                  <td className="border px-2 md:px-4 py-2 flex gap-2 md:gap-4 items-center">
-                    <h3 className="w-12">{row.member}</h3>
-                    {row.gold > 0 && (
-                      <div className="flex items-center gap-1">
-                        <IconMedal className="w-6 h-6 text-[#FFD700]" />
-                        {row.gold}
-                      </div>
-                    )}
-                    {row.silver > 0 && (
-                      <div className="flex items-center gap-1">
-                        <IconMedal className="w-6 h-6 text-[#C0C0C0]" />
-                        {row.silver}
-                      </div>
-                    )}
-                    {row.bronze > 0 && (
-                      <div className="flex items-center gap-1">
-                        <IconMedal className="w-6 h-6 text-[#CD7F32]" />
-                        {row.bronze}
-                      </div>
-                    )}
-                  </td>
-                  {displayedScores[row.score] ? null : (
-                    <td
-                      className="border px-2 md:px-4 py-2"
-                      rowSpan={scoreRowspanCounts[row.score]}
-                    >
+    <div className="min-h-screen w-full p-4 md:p-8 bg-slate-50">
+      <div className="max-w-5xl mx-auto space-y-6">
+        {/* Family Draft Scores - responsive cards */}
+        <div className="bg-white shadow-md rounded-lg p-4 md:p-6">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">
+            Family Draft Scores
+          </h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {rankedFamilyScores.map((row, index) => (
+              <div
+                key={index}
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 border rounded-md bg-white"
+              >
+                <div className="flex items-center">
+                  <div className="text-lg text-gray-500 w-8 text-center">
+                    {row.rank}
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold text-gray-800">
+                      {row.member}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Prominent medal counts + big score */}
+                <div className="flex items-center gap-6 sm:mt-0">
+                  <div className="flex items-center gap-2">
+                    <IconMedal className="w-6 h-6 text-[#FFD700]" />
+                    <div className="text-lg font-semibold text-gray-800">
+                      {row.gold}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <IconMedal className="w-6 h-6 text-[#C0C0C0]" />
+                    <div className="text-lg font-semibold text-gray-800">
+                      {row.silver}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <IconMedal className="w-6 h-6 text-[#CD7F32]" />
+                    <div className="text-lg font-semibold text-gray-800">
+                      {row.bronze}
+                    </div>
+                  </div>
+                  <div className="ml-2 text-right">
+                    <div className="text-xs text-gray-500">Score</div>
+                    <div className="text-2xl font-extrabold text-indigo-700 leading-tight">
                       {row.score}
-                    </td>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Secondary chips: placed after medals/score */}
+                <div className="w-full sm:w-auto flex flex-wrap items-center gap-2 sm:mt-0 justify-start sm:justify-end opacity-80">
+                  {familyDraft[row.member].map((country, i) =>
+                    renderCountryChip(country, i)
                   )}
-                  {displayedScores[row.score] = true}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="bg-white shadow-lg rounded-lg p-4 md:p-6">
-        <h1 className="text-2xl font-bold mb-4">
-          Standings for Drafted Countries
-        </h1>
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full">
+
+        {/* Standings for drafted countries */}
+        <div className="bg-white shadow-md rounded-lg p-4 md:p-6 overflow-x-auto">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">
+            Standings for Drafted Countries
+          </h2>
+          <table className="min-w-full table-auto">
             <thead>
-              <tr>
-                <th className="px-2 md:px-4 py-2">Country</th>
-                <th className="px-2 md:px-4 py-2">Gold</th>
-                <th className="px-2 md:px-4 py-2">Silver</th>
-                <th className="px-2 md:px-4 py-2">Bronze</th>
-                <th className="px-2 md:px-4 py-2">Total</th>
+              <tr className="text-left text-sm text-gray-600">
+                <th className="px-3 py-2">Country</th>
+                <th className="px-3 py-2">Gold</th>
+                <th className="px-3 py-2">Silver</th>
+                <th className="px-3 py-2">Bronze</th>
+                <th className="px-3 py-2">Total</th>
               </tr>
             </thead>
             <tbody>
-              {filteredMedalData.map((row, index) => (
-                <tr key={index}>
-                  <td className="border px-2 md:px-4 py-2">{row.country}</td>
-                  <td className="border px-2 md:px-4 py-2">{row.gold}</td>
-                  <td className="border px-2 md:px-4 py-2">{row.silver}</td>
-                  <td className="border px-2 md:px-4 py-2">{row.bronze}</td>
-                  <td className="border px-2 md:px-4 py-2">{row.total}</td>
-                </tr>
-              ))}
+              {filteredMedalData.map((row, index) => {
+                const normalized = normalizeCountryName(row.country);
+                const code = normalized ? getCode(normalized) : null;
+                return (
+                  <tr
+                    key={index}
+                    className="border-b last:border-b-0 hover:bg-slate-50"
+                  >
+                    <td className="px-3 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="font-medium truncate max-w-[12rem]">
+                          {row.country}
+                        </div>
+                        {row.country === "Individual Neutral Athletes" ? (
+                          <span className="inline-flex items-center bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full text-xs font-medium">
+                            INA
+                          </span>
+                        ) : code ? (
+                          <span
+                            className={`fi fi-${String(code).toLowerCase()} w-6 h-4 inline-block`}
+                            aria-hidden="true"
+                          />
+                        ) : null}
+                      </div>
+                    </td>
+                    <td className="px-3 py-3">{row.gold}</td>
+                    <td className="px-3 py-3">{row.silver}</td>
+                    <td className="px-3 py-3">{row.bronze}</td>
+                    <td className="px-3 py-3">{row.total}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

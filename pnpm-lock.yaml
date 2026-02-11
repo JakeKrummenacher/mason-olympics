@@ -23,6 +23,12 @@ importers:
       cheerio:
         specifier: ^1.0.0-rc.12
         version: 1.2.0
+      flag-icons:
+        specifier: ^7.5.0
+        version: 7.5.0
+      iso-3166-1-alpha-2:
+        specifier: ^1.0.2
+        version: 1.0.2
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2763,6 +2769,9 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
+  flag-icons@7.5.0:
+    resolution: {integrity: sha512-kd+MNXviFIg5hijH766tt+3x76ele1AXlo4zDdCxIvqWZhKt4T83bOtxUOOMlTx/EcFdUMH5yvQgYlFh1EqqFg==}
+
   flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -3295,6 +3304,9 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
+  iso-3166-1-alpha-2@1.0.2:
+    resolution: {integrity: sha512-B9xyzPQIpVKJnEvVfjzgWA/P6c6tL6LqqxrR14NJaw2RpGtCMcyFYcwcJw6h/PYMTq7hAZp63oIhxqcfO90TRA==}
+
   istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
@@ -3783,6 +3795,9 @@ packages:
   mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
     hasBin: true
+
+  mout@1.2.4:
+    resolution: {integrity: sha512-mZb9uOruMWgn/fw28DG4/yE3Kehfk1zKCLhuDU2O3vlKdnBBr4XaOCqVTflJ5aODavGUPqFHZgrFX3NJVuxGhQ==}
 
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
@@ -9065,6 +9080,8 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
+  flag-icons@7.5.0: {}
+
   flat-cache@3.2.0:
     dependencies:
       flatted: 3.3.3
@@ -9608,6 +9625,10 @@ snapshots:
   isarray@2.0.5: {}
 
   isexe@2.0.0: {}
+
+  iso-3166-1-alpha-2@1.0.2:
+    dependencies:
+      mout: 1.2.4
 
   istanbul-lib-coverage@3.2.2: {}
 
@@ -10359,6 +10380,8 @@ snapshots:
   mkdirp@0.5.6:
     dependencies:
       minimist: 1.2.8
+
+  mout@1.2.4: {}
 
   ms@2.0.0: {}
 
