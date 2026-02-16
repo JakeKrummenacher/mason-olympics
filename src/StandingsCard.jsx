@@ -63,7 +63,7 @@ const MedalTable = () => {
     const fetchMedalTable = async () => {
       try {
         const response = await axios.get(
-          "https://api.allorigins.win/raw?url=https://en.wikipedia.org/wiki/2026_Winter_Olympics_medal_table"
+          "https://cors-anywhere.com/https://en.wikipedia.org/wiki/2026_Winter_Olympics_medal_table"
         );
         const html = response.data;
 
